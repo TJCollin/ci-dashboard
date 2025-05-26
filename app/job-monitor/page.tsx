@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,6 +10,7 @@ import { Filter, Search, Server } from "lucide-react"
 import { Pagination } from "@/components/pagination"
 import { JobTable } from "@/components/job-monitor/job-table"
 import type Job from "@/types/job"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export default function JobMonitorPage() {
   const [jobs, setJobs] = useState<Job[]>([])
@@ -136,38 +136,53 @@ export default function JobMonitorPage() {
                     onChange={handleSearchChange}
                   />
                 </div>
-                <Button variant="outline" size="icon">
-                  <Filter className="h-4 w-4" />
-                  <span className="sr-only">筛选</span>
-                </Button>
-              </div>
-              <div className="flex items-center gap-2">
-                <Select value={statusFilter || "all"} onValueChange={handleStatusFilterChange}>
-                  <SelectTrigger className="w-[150px]">
-                    <SelectValue placeholder="状态" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">所有状态</SelectItem>
-                    <SelectItem value="SUCCESS">成功</SelectItem>
-                    <SelectItem value="FAILURE">失败</SelectItem>
-                    <SelectItem value="RUNNING">运行中</SelectItem>
-                    <SelectItem value="PENDING">等待中</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Select value={jobTypeFilter || "all"} onValueChange={handleJobTypeFilterChange}>
-                  <SelectTrigger className="w-[150px]">
-                    <SelectValue placeholder="任务类型" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">所有类型</SelectItem>
-                    <SelectItem value="app_ci">App CI</SelectItem>
-                    <SelectItem value="system_ci">系统 CI</SelectItem>
-                    <SelectItem value="integration_ci">集成 CI</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button variant="outline" size="sm" onClick={clearFilters}>
-                  清除筛选
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="icon">
+                      <Filter className="h-4 w-4" />
+                      <span className="sr-only">筛选</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-[200px]">
+                    <DropdownMenuLabel>筛选选项</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <div className="p-2">
+                      <div className="mb-2">
+                        <label className="text-xs font-medium mb-1 block">状态</label>
+                        <Select value={statusFilter || "all"} onValueChange={handleStatusFilterChange}>
+                          <SelectTrigger className="h-8">
+                            <SelectValue placeholder="所有状态" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">所有状态</SelectItem>
+                            <SelectItem value="SUCCESS">成功</SelectItem>
+                            <SelectItem value="FAILURE">失败</SelectItem>
+                            <SelectItem value="RUNNING">运行中</SelectItem>
+                            <SelectItem value="PENDING">等待中</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="mb-2">
+                        <label className="text-xs font-medium mb-1 block">任务类型</label>
+                        <Select value={jobTypeFilter || "all"} onValueChange={handleJobTypeFilterChange}>
+                          <SelectTrigger className="h-8">
+                            <SelectValue placeholder="所有类型" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">所有类型</SelectItem>
+                            <SelectItem value="build">构建</SelectItem>
+                            <SelectItem value="test">测试</SelectItem>
+                            <SelectItem value="deploy">部署</SelectItem>
+                            <SelectItem value="verify">验证</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <Button variant="outline" size="sm" className="w-full mt-2" onClick={clearFilters}>
+                        清除筛选
+                      </Button>
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
 
